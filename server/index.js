@@ -21,11 +21,17 @@ database.connect();
 //middlewares
 app.use(express.json());
 app.use(cookieParser());
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://edtechnology.netlify.app",
+  "https://6ae1ad690fc486e2dbdf386c--edtechnology.netlify.app",
+]
+
 app.use(
-	cors({
-		origin:"http://localhost:3000",
-		credentials:true,
-	})
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
 )
 
 app.use(
