@@ -1,6 +1,8 @@
 
 # StudyNotion - EdTech Platform
-:rocket: [Link to website][https://studynotion-frontend.vercel.app/]
+:rocket: [Link to website][https://edtechnology.netlify.app]
+
+🔧 Backend API:[https://edtech-t0qm.onrender.com]
 
 
 ![Main Page](images/mainpage.png)
