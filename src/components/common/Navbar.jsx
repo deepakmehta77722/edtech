@@ -4,6 +4,7 @@ import { BsChevronDown } from "react-icons/bs"
 import { useSelector } from "react-redux"
 import { Link, matchPath, useLocation } from "react-router-dom"
 
+
 import logo from "../../assets/Logo/Logo-Full-Light.png"
 import { NavbarLinks } from "../../data/navbar-links"
 import { apiConnector } from "../../services/apiconnector"
@@ -21,6 +22,7 @@ function Navbar() {
   const [loading, setLoading] = useState(false)
 
 const [isMenuOpen, setIsMenuOpen] = useState(false)
+const [mobileCatalogOpen, setMobileCatalogOpen] = useState(false)
 
   useEffect(() => {
     ;(async () => {
@@ -142,9 +144,12 @@ const [isMenuOpen, setIsMenuOpen] = useState(false)
           )}
           {token !== null && <ProfileDropdown />}
         </div>
-      <button
+    <button
   className="mr-4 md:hidden"
-  onClick={() => setIsMenuOpen(!isMenuOpen)}
+  onClick={() => {
+    setIsMenuOpen(!isMenuOpen)
+    setMobileCatalogOpen(false)
+  }}
 >
   <AiOutlineMenu fontSize={24} fill="#AFB2BF" />
 </button>
@@ -156,16 +161,74 @@ const [isMenuOpen, setIsMenuOpen] = useState(false)
 
     <ul className="flex flex-col gap-5 text-richblack-25">
 
-      {NavbarLinks.map((link, index) => (
-        <li key={index}>
-          <Link
-            to={link.path}
-            onClick={() => setIsMenuOpen(false)}
-          >
-            {link.title}
-          </Link>
-        </li>
-      ))}
+     
+
+{NavbarLinks.map((link, index) => (
+  <li key={index}>
+    {link.title === "Catalog" ? (
+      <>
+        <div
+          className="flex cursor-pointer items-center justify-between"
+          onClick={() =>
+            setMobileCatalogOpen(!mobileCatalogOpen)
+          }
+        >
+          <p>Catalog</p>
+
+          <BsChevronDown
+            className={`transition-transform ${
+              mobileCatalogOpen ? "rotate-180" : ""
+            }`}
+          />
+        </div>
+
+        {mobileCatalogOpen && (
+          <div className="mt-4 flex flex-col gap-4 pl-4">
+            {loading ? (
+              <p>Loading...</p>
+            ) : subLinks?.filter(
+                (subLink) => subLink?.courses?.length > 0
+              ).length > 0 ? (
+              subLinks
+                .filter(
+                  (subLink) => subLink?.courses?.length > 0
+                )
+                .map((subLink, i) => (
+                  <Link
+                    key={i}
+                    to={`/catalog/${subLink.name
+                      .split(" ")
+                      .join("-")
+                      .toLowerCase()}`}
+                    onClick={() => {
+                      setIsMenuOpen(false)
+                      setMobileCatalogOpen(false)
+                    }}
+                  >
+                    {subLink.name}
+                  </Link>
+                ))
+            ) : (
+              <p>No Courses Found</p>
+            )}
+          </div>
+        )}
+      </>
+    ) : (
+      <Link
+        to={link.path}
+        onClick={() => {
+          setIsMenuOpen(false)
+          setMobileCatalogOpen(false)
+        }}
+      >
+        {link.title}
+      </Link>
+    )}
+  </li>
+))}
+
+
 
       {token === null && (
         <>
@@ -203,6 +266,10 @@ const [isMenuOpen, setIsMenuOpen] = useState(false)
     </ul>
   </div>
 )}
+
+
+
+
 
 
     </div>
