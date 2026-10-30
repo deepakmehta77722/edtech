@@ -20,6 +20,8 @@ function Navbar() {
   const [subLinks, setSubLinks] = useState([])
   const [loading, setLoading] = useState(false)
 
+const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   useEffect(() => {
     ;(async () => {
       setLoading(true)
@@ -140,10 +142,69 @@ function Navbar() {
           )}
           {token !== null && <ProfileDropdown />}
         </div>
-        <button className="mr-4 md:hidden">
-          <AiOutlineMenu fontSize={24} fill="#AFB2BF" />
-        </button>
+      <button
+  className="mr-4 md:hidden"
+  onClick={() => setIsMenuOpen(!isMenuOpen)}
+>
+  <AiOutlineMenu fontSize={24} fill="#AFB2BF" />
+</button>
       </div>
+
+{isMenuOpen && (
+  <div className="absolute left-0 top-14 z-[1000] w-full
+                  bg-richblack-800 p-6 md:hidden">
+
+    <ul className="flex flex-col gap-5 text-richblack-25">
+
+      {NavbarLinks.map((link, index) => (
+        <li key={index}>
+          <Link
+            to={link.path}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            {link.title}
+          </Link>
+        </li>
+      ))}
+
+      {token === null && (
+        <>
+          <li>
+            <Link
+              to="/login"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Log in
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              to="/signup"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Sign up
+            </Link>
+          </li>
+        </>
+      )}
+
+      {token !== null && (
+        <li>
+          <Link
+            to="/dashboard/my-profile"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Dashboard / Profile
+          </Link>
+        </li>
+      )}
+
+    </ul>
+  </div>
+)}
+
+
     </div>
   )
 }
